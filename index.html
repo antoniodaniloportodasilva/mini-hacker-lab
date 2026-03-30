@@ -21,9 +21,13 @@
         border: 2px solid #00ff00;
         padding: 20px;
         margin-top: 20px;
-        height: 200px;
+        height: 250px;
         overflow-y: auto;
         text-align: left;
+    }
+
+    #keyboard {
+        margin-top: 20px;
     }
 
     .key {
@@ -47,6 +51,16 @@
         width: auto;
         padding: 10px 20px;
     }
+
+    #cursor {
+        animation: piscar 1s infinite;
+    }
+
+    @keyframes piscar {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
 </style>
 
 </head>
@@ -55,17 +69,18 @@
 <h1>💻 Treinamento Hacker Kids</h1>
 <p>Pressione teclas para aprender 👇</p>
 
-<div id="keyboard"></div>
-
 <div class="terminal" id="terminal">
     <p>> Sistema iniciado...</p>
 </div>
+
+<!-- TECLADO AGORA FICA ABAIXO -->
+<div id="keyboard"></div>
 
 <script>
 const keyboardDiv = document.getElementById("keyboard");
 const terminal = document.getElementById("terminal");
 
-// Criar teclas A-Z
+// Criar teclado A-Z
 for (let i = 65; i <= 90; i++) {
     let key = document.createElement("div");
     key.classList.add("key");
@@ -85,7 +100,7 @@ especiais.forEach(tecla => {
     keyboardDiv.appendChild(key);
 });
 
-// Função de log no terminal
+// Terminal
 function log(msg) {
     let p = document.createElement("p");
     p.innerText = "> " + msg;
@@ -93,34 +108,22 @@ function log(msg) {
     terminal.scrollTop = terminal.scrollHeight;
 }
 
-// Detectar teclas
-document.addEventListener("keydown", function(event) {
-    let tecla = event.key.toUpperCase();
+// Input estilo terminal
+let inputAtual = "";
+let linhaInput = document.createElement("p");
+linhaInput.innerHTML = "> <span id='input'></span><span id='cursor'>█</span>";
+terminal.appendChild(linhaInput);
 
-    // Destacar tecla
-    let keyDiv = document.getElementById("key-" + tecla);
-    if (keyDiv) {
-        keyDiv.classList.add("active");
-        setTimeout(() => keyDiv.classList.remove("active"), 200);
-    }
+const inputSpan = document.getElementById("input");
 
-    // Teclas especiais
-    if (event.key === " ") {
-        log("Espaço pressionado 🚀");
-    } else if (event.key === "Enter") {
-        log("Enter pressionado ✔️");
-    } else if (event.key === "Shift") {
-        log("Shift ativado 🔼");
-    } else if (event.key === "Control") {
-        log("Ctrl ativado 🧠");
-    }
+// Nome secreto
 let sequencia = "";
 const nomeSecreto = "LORRAN";
 
-// Função de upgrade fake
+// Upgrade fake
 function executarUpgrade() {
     log("Iniciando atualização do sistema...");
-    
+
     let mensagens = [
         "Conectando ao servidor...",
         "Baixando pacotes...",
@@ -139,60 +142,75 @@ function executarUpgrade() {
         } else {
             clearInterval(intervalo);
         }
-    }, 800);
+    }, 700);
 }
 
-// Detectar sequência do nome
+// Atualiza input
+function atualizarInput() {
+    inputSpan.textContent = inputAtual;
+}
+
+// Evento principal (UNIFICADO)
 document.addEventListener("keydown", function(event) {
-    let tecla = event.key.toUpperCase();
 
-    if (tecla.length === 1 && tecla.match(/[A-Z]/)) {
-        sequencia += tecla;
+    let tecla = event.key;
+    let teclaUpper = tecla.toUpperCase();
 
-        // Limita tamanho
-        if (sequencia.length > nomeSecreto.length) {
-            sequencia = sequencia.slice(-nomeSecreto.length);
-        }
-
-        if (sequencia === nomeSecreto) {
-            executarUpgrade();
-            sequencia = "";
-        }
+    // Destaque teclado
+    let keyDiv = document.getElementById("key-" + teclaUpper);
+    if (keyDiv) {
+        keyDiv.classList.add("active");
+        setTimeout(() => keyDiv.classList.remove("active"), 200);
     }
-#cursor {
-    animation: piscar 1s infinite;
-}
 
-@keyframes piscar {
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
-}
+    // Digitação normal
+    if (tecla.length === 1) {
+        inputAtual += tecla;
+    }
 
+    if (tecla === " ") {
+        inputAtual += " ";
+        event.preventDefault();
+    }
 
-});
-    // Comandos com CTRL
+    if (tecla === "Backspace") {
+        inputAtual = inputAtual.slice(0, -1);
+    }
+
+    if (tecla === "Enter") {
+        log(inputAtual);
+
+        if (inputAtual.toUpperCase() === nomeSecreto) {
+            executarUpgrade();
+        } else {
+            log("Comando não reconhecido ❌");
+        }
+
+        inputAtual = "";
+    }
+
+    atualizarInput();
+
+    // CTRL + comandos
     if (event.ctrlKey) {
-        let comando = tecla;
-
-        switch(comando) {
+        switch(teclaUpper) {
             case "A":
                 log("CTRL + A → Selecionar tudo 🟢");
                 break;
             case "B":
-                log("CTRL + B → Modo hacker ativado 😎");
+                log("CTRL + B → Modo hacker 😎");
                 break;
             case "C":
-                log("CTRL + C → Copiar arquivo 📁");
+                log("CTRL + C → Copiar 📁");
                 break;
             case "D":
-                log("CTRL + D → Defesa ativada 🛡️");
+                log("CTRL + D → Defesa 🛡️");
                 break;
             case "E":
-                log("CTRL + E → Energia carregando ⚡");
+                log("CTRL + E → Energia ⚡");
                 break;
             default:
-                log("CTRL + " + comando + " → Comando secreto 🤫");
+                log("CTRL + " + teclaUpper + " → Comando secreto 🤫");
         }
     }
 });
