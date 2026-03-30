@@ -159,6 +159,17 @@ document.addEventListener("keydown", function(event) {
             sequencia = "";
         }
     }
+#cursor {
+    animation: piscar 1s infinite;
+}
+
+@keyframes piscar {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+
 });
     // Comandos com CTRL
     if (event.ctrlKey) {
