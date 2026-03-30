@@ -114,7 +114,52 @@ document.addEventListener("keydown", function(event) {
     } else if (event.key === "Control") {
         log("Ctrl ativado 🧠");
     }
+let sequencia = "";
+const nomeSecreto = "LORRAN";
 
+// Função de upgrade fake
+function executarUpgrade() {
+    log("Iniciando atualização do sistema...");
+    
+    let mensagens = [
+        "Conectando ao servidor...",
+        "Baixando pacotes...",
+        "Instalando módulos...",
+        "Atualizando sistema...",
+        "Upgrade concluído com sucesso ✅",
+        "Bem-vindo, Lorran 😎"
+    ];
+
+    let i = 0;
+
+    let intervalo = setInterval(() => {
+        if (i < mensagens.length) {
+            log(mensagens[i]);
+            i++;
+        } else {
+            clearInterval(intervalo);
+        }
+    }, 800);
+}
+
+// Detectar sequência do nome
+document.addEventListener("keydown", function(event) {
+    let tecla = event.key.toUpperCase();
+
+    if (tecla.length === 1 && tecla.match(/[A-Z]/)) {
+        sequencia += tecla;
+
+        // Limita tamanho
+        if (sequencia.length > nomeSecreto.length) {
+            sequencia = sequencia.slice(-nomeSecreto.length);
+        }
+
+        if (sequencia === nomeSecreto) {
+            executarUpgrade();
+            sequencia = "";
+        }
+    }
+});
     // Comandos com CTRL
     if (event.ctrlKey) {
         let comando = tecla;
