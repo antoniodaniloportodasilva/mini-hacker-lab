@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Treinamento Hacker Kids</title>
+
+<style>
+    body {
+        background-color: #000;
+        color: #00ff00;
+        font-family: "Courier New", monospace;
+        text-align: center;
+        padding: 20px;
+    }
+
+    h1 {
+        text-shadow: 0 0 10px #00ff00;
+    }
+
+    .terminal {
+        border: 2px solid #00ff00;
+        padding: 20px;
+        margin-top: 20px;
+        height: 200px;
+        overflow-y: auto;
+        text-align: left;
+    }
+
+    .key {
+        display: inline-block;
+        border: 1px solid #00ff00;
+        padding: 10px;
+        margin: 5px;
+        width: 40px;
+        text-align: center;
+        border-radius: 5px;
+        transition: 0.2s;
+    }
+
+    .key.active {
+        background-color: #00ff00;
+        color: #000;
+        box-shadow: 0 0 10px #00ff00;
+    }
+
+    .special {
+        width: auto;
+        padding: 10px 20px;
+    }
+</style>
+
+</head>
+<body>
+
+<h1>💻 Treinamento Hacker Kids</h1>
+<p>Pressione teclas para aprender 👇</p>
+
+<div id="keyboard"></div>
+
+<div class="terminal" id="terminal">
+    <p>> Sistema iniciado...</p>
+</div>
+
+<script>
+const keyboardDiv = document.getElementById("keyboard");
+const terminal = document.getElementById("terminal");
+
+// Criar teclas A-Z
+for (let i = 65; i <= 90; i++) {
+    let key = document.createElement("div");
+    key.classList.add("key");
+    key.innerText = String.fromCharCode(i);
+    key.id = "key-" + String.fromCharCode(i);
+    keyboardDiv.appendChild(key);
+}
+
+// Teclas especiais
+const especiais = ["SHIFT", "ENTER", "SPACE", "CTRL"];
+
+especiais.forEach(tecla => {
+    let key = document.createElement("div");
+    key.classList.add("key", "special");
+    key.innerText = tecla;
+    key.id = "key-" + tecla;
+    keyboardDiv.appendChild(key);
+});
+
+// Função de log no terminal
+function log(msg) {
+    let p = document.createElement("p");
+    p.innerText = "> " + msg;
+    terminal.appendChild(p);
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
+// Detectar teclas
+document.addEventListener("keydown", function(event) {
+    let tecla = event.key.toUpperCase();
+
+    // Destacar tecla
+    let keyDiv = document.getElementById("key-" + tecla);
+    if (keyDiv) {
+        keyDiv.classList.add("active");
+        setTimeout(() => keyDiv.classList.remove("active"), 200);
+    }
+
+    // Teclas especiais
+    if (event.key === " ") {
+        log("Espaço pressionado 🚀");
+    } else if (event.key === "Enter") {
+        log("Enter pressionado ✔️");
+    } else if (event.key === "Shift") {
+        log("Shift ativado 🔼");
+    } else if (event.key === "Control") {
+        log("Ctrl ativado 🧠");
+    }
+
+    // Comandos com CTRL
+    if (event.ctrlKey) {
+        let comando = tecla;
+
+        switch(comando) {
+            case "A":
+                log("CTRL + A → Selecionar tudo 🟢");
+                break;
+            case "B":
+                log("CTRL + B → Modo hacker ativado 😎");
+                break;
+            case "C":
+                log("CTRL + C → Copiar arquivo 📁");
+                break;
+            case "D":
+                log("CTRL + D → Defesa ativada 🛡️");
+                break;
+            case "E":
+                log("CTRL + E → Energia carregando ⚡");
+                break;
+            default:
+                log("CTRL + " + comando + " → Comando secreto 🤫");
+        }
+    }
+});
+</script>
+
+</body>
+</html>
